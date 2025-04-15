@@ -13,7 +13,7 @@ def compton_energy(E_in, theta_deg):
     E_out = E_in / (1 + (E_in / me_c2) * (1 - np.cos(theta_rad)))
     return E_out
 
-def simulate_measurement():
+def simulate_measurement(sigma_E=sigma_E):
     # Scattering angles from 10° to 80° in steps of 10
     angles_deg = np.arange(10, 90, 10)
     E_true = compton_energy(E_in, angles_deg)
