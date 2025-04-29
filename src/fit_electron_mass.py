@@ -17,7 +17,7 @@ def compton_model(theta_deg, me):
     theta_rad = np.radians(theta_deg)
     return E_in / (1 + (E_in / me) * (1 - np.cos(theta_rad)))
 
-def maximum_likelihood_fit(angles, E_measured):
+def maximum_likelihood_fit(angles, E_measured, sigma_E = sigma_E):
     # perform maximum likelihood fit to simulated data points
     popt, pcov = curve_fit(compton_model, angles, E_measured, p0=[0.5], sigma=np.full_like(E_measured, sigma_E), absolute_sigma=True)
     me_fit = popt[0]

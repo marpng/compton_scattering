@@ -11,7 +11,7 @@ def repetitions(sigma_E=sigma_E):
     uncertainties = []
     for i in range(N):
         angles_deg, E_measured, E_true = compton_simulator1.simulate_measurement(sigma_E)
-        mass, uncertainty = fit_electron_mass.maximum_likelihood_fit(angles_deg, E_measured)
+        mass, uncertainty = fit_electron_mass.maximum_likelihood_fit(angles_deg, E_measured, sigma_E)
         masses.append(mass)
         uncertainties.append(uncertainty)
     return masses, uncertainties
