@@ -10,7 +10,7 @@ from scipy.optimize import curve_fit
 
 # Constants Task 3b
 E_in = 0.6617  # MeV
-sigma_E = 0.01  # MeV (assumed known detector resolution)
+sigma_E = 0.01  # MeV -assumed known detector resolution
 
 # Compton equation model
 def compton_model(theta_deg, me):

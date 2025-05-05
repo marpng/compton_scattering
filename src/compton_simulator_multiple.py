@@ -53,16 +53,11 @@ def pull_distribution(masses, uncertainties, fig_name="../results/histogram_pull
         masses (list): List of measured electron masses (in MeV).
         uncertainties (list): List of uncertainties associated with the measured masses.
         fig_name (str): Path to save the histogram plot.
-
-    Returns:
-        None: The function plots a histogram of the pull distribution and prints its mean and standard deviation.
-    """
+     """
     pulls = []
     for i in range(len(masses)):
         pull = (masses[i] - 0.511) / uncertainties[i]
         pulls.append(pull)
-
-    # Plot histogram of pull distribution
     plt.hist(pulls, bins=30, density=True)
     plt.xlabel("Pull")
     plt.ylabel("Probability Density")
