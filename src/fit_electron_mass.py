@@ -8,26 +8,38 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
-#Constants Task 3b
+# Constants Task 3b
 E_in = 0.6617  # MeV
 sigma_E = 0.01  # MeV (assumed known detector resolution)
 
-# compton equation model
+# Compton equation model
 def compton_model(theta_deg, me):
     theta_rad = np.radians(theta_deg)
     return E_in / (1 + (E_in / me) * (1 - np.cos(theta_rad)))
 
-def maximum_likelihood_fit(angles, E_measured, sigma_E = sigma_E):
-    # perform maximum likelihood fit to simulated data points
-    popt, pcov = curve_fit(compton_model, angles, E_measured, p0=[0.5], sigma=np.full_like(E_measured, sigma_E), absolute_sigma=True)
+def maximum_likelihood_fit(angles, E_measured, sigma_E=sigma_E):
+    """
+    Perform a maximum likelihood fit using the Compton model.
+    Returns the fitted electron mass and its uncertainty.
+    """
+    popt, pcov = curve_fit(
+        compton_model,
+        angles,
+        E_measured,
+        p0=[0.5],
+        sigma=np.full_like(E_measured, sigma_E),
+        absolute_sigma=True,
+        bounds=(0, np.inf)  # <-- Enforces physical range of mass
+    )
     me_fit = popt[0]
     me_uncertainty = np.sqrt(pcov[0][0])
     return (me_fit, me_uncertainty)
 
 def plot(angles, E_measured, me_fit, me_uncertainty):
+    """
+    Plot measured data and fitted Compton model.
+    """
     print(f"Reconstructed electron mass: {me_fit:.5f} ± {me_uncertainty:.5f} MeV")
-
-    # plot fit vs. data
     theta_fit = np.linspace(10, 80, 500)
     E_fit = compton_model(theta_fit, me_fit)
 

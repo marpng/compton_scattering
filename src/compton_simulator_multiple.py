@@ -10,10 +10,19 @@ def repetitions(sigma_E=sigma_E):
     masses = []
     uncertainties = []
     for i in range(N):
-        angles_deg, E_measured, E_true = compton_simulator1.simulate_measurement(sigma_E)
-        mass, uncertainty = fit_electron_mass.maximum_likelihood_fit(angles_deg, E_measured, sigma_E)
-        masses.append(mass)
-        uncertainties.append(uncertainty)
+        try:
+            angles_deg, E_measured, E_true = compton_simulator1.simulate_measurement(sigma_E)
+            mass, uncertainty = fit_electron_mass.maximum_likelihood_fit(angles_deg, E_measured, sigma_E)
+
+            # Skip unphysical or broken fits
+            if mass <= 0 or uncertainty <= 0:
+                continue
+
+            masses.append(mass)
+            uncertainties.append(uncertainty)
+        except Exception as e:
+            print(f"Fit failed on repetition {i}: {e}")
+            continue
     return masses, uncertainties
 
 def histogram(masses, fig_name="../results/histogram_repetition.png"):
@@ -49,8 +58,7 @@ def pull_distribution(masses, uncertainties, fig_name="../results/histogram_pull
         None: The function plots a histogram of the pull distribution and prints its mean and standard deviation.
     """
     pulls = []
-
-    for i in range(N):
+    for i in range(len(masses)):
         pull = (masses[i] - 0.511) / uncertainties[i]
         pulls.append(pull)
 
@@ -87,7 +95,6 @@ def uncertainty_vs_resolution():
         mean, sd = distribution(masses)
         pull_distribution(masses, uncertainties, fig_name_pull)
         print("=" * 60)
-
 
 if __name__ == "__main__":
     np.random.seed(42)
